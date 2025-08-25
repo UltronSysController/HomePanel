@@ -17,11 +17,6 @@
       "destination": "/index.html"
     }
   ],
-  "env": {
-    "REACT_APP_API_BASE_URL": "@react_app_api_base_url",
-    "REACT_APP_ULTRON_API_KEY": "@react_app_ultron_api_key",
-    "REACT_APP_ULTRON_APP_ID": "@react_app_ultron_app_id"
-  },
   "build": {
     "env": {
       "CI": "false"
