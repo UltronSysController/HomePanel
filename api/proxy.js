@@ -12,8 +12,28 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Extract the actual API path
-    const apiPath = req.url.replace('/api/proxy', '');
+    // Extract the actual API path from query parameter or URL
+    let apiPath = req.query?.path || req.url;
+    
+    // Remove the /api prefix if present
+    if (apiPath.startsWith('/api')) {
+      apiPath = apiPath.substring(4);
+    }
+    
+    // Remove query string if present
+    const queryIndex = apiPath.indexOf('?');
+    if (queryIndex > -1) {
+      apiPath = apiPath.substring(0, queryIndex);
+    }
+    
+    // Ensure path starts with /
+    if (!apiPath.startsWith('/')) {
+      apiPath = '/' + apiPath;
+    }
+    
+    console.log('Request URL:', req.url);
+    console.log('Query path:', req.query?.path);
+    console.log('Extracted path:', apiPath);
     
     // Determine the target API URL
     let apiUrl;
