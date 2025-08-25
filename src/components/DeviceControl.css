@@ -1,0 +1,1122 @@
+/* Overlay */
+.device-control-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(80px) saturate(200%);
+  -webkit-backdrop-filter: blur(80px) saturate(200%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal */
+.device-control-modal {
+  background: rgba(50, 50, 50, 0.7);
+  backdrop-filter: blur(50px) saturate(180%);
+  -webkit-backdrop-filter: blur(50px) saturate(180%);
+  border-radius: 30px;
+  width: 340px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+  padding-bottom: 60px; /* Add space for settings button */
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.modal-header {
+  text-align: center;
+  padding: 24px 24px 8px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.4px;
+}
+
+.device-status {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Simple Switch/Outlet Controls */
+.simple-switch-controls {
+  padding: 48px 0;
+}
+
+/* Power Button Section */
+.power-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Apple Home Vertical Switch */
+.apple-vertical-switch {
+  width: 100px;
+  height: 160px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.apple-vertical-switch.off {
+  background: rgba(120, 120, 128, 0.16);
+}
+
+.apple-vertical-switch.on {
+  background: rgba(255, 193, 7, 0.5); /* 黃色 + 50% Alpha */
+  box-shadow: 0 8px 32px rgba(255, 193, 7, 0.3);
+}
+
+.apple-vertical-switch:hover {
+  transform: scale(1.05);
+}
+
+.apple-vertical-switch:active {
+  transform: scale(0.98);
+}
+
+/* 滑動指示器背景 */
+.switch-indicator {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  border-radius: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+              0 1px 2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* OFF 狀態：白色圓形 */
+.apple-vertical-switch.off .switch-indicator {
+  background: white;
+}
+
+/* ON 狀態：黃色圓形 */
+.apple-vertical-switch.on .switch-indicator {
+  background: #FFC107; /* Material Design Amber */
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.4),
+              0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.apple-vertical-switch.off .switch-indicator {
+  bottom: 8px;
+}
+
+.apple-vertical-switch.on .switch-indicator {
+  top: 8px;
+}
+
+/* 指示器內的圖標 */
+.indicator-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indicator-icon svg {
+  display: block;
+}
+
+/* Light Controls - Apple Style */
+.light-controls-apple {
+  padding: 20px 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Brightness Bar Container */
+.brightness-bar-container {
+  width: 100px;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50px;
+  padding: 8px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.3s ease;
+}
+
+.brightness-bar-container.off {
+  opacity: 0.4;
+}
+
+.brightness-bar {
+  width: 100%;
+  height: 100%;
+  border-radius: 46px;
+  background: rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.brightness-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFC107;
+  border-radius: 46px;
+  transition: height 0.1s ease-out, opacity 0.3s ease;
+}
+
+.brightness-bar-container.off .brightness-fill {
+  opacity: 0.3;
+}
+
+.brightness-icon {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.brightness-icon.off {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.brightness-icon.on {
+  color: white;
+  filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.6));
+}
+
+/* Simple Light Toggle (for lights without brightness) */
+.simple-light-toggle {
+  padding: 20px 0;
+}
+
+.light-toggle-button {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.light-toggle-button.on {
+  background: #FFC107;
+  color: white;
+}
+
+.light-toggle-button:hover {
+  transform: scale(1.05);
+}
+
+.light-toggle-button:active {
+  transform: scale(0.98);
+}
+
+
+
+/* Brightness Section */
+.brightness-section {
+  padding: 0 32px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.slider-container {
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.brightness-slider {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.brightness-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.brightness-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.brightness-slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.slider-track {
+  position: absolute;
+  height: 100%;
+  background: white;
+  border-radius: 3px;
+  transition: width 0.1s ease-out;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Color Temperature Section */
+.color-temp-section {
+  padding: 0 32px;
+  margin-bottom: 32px;
+}
+
+.color-temp-slider {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.color-temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.color-temp-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.color-temp-slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.color-temp-track {
+  position: absolute;
+  height: 6px;
+  border-radius: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Color Section */
+.color-section {
+  padding: 0 40px 40px;
+}
+
+.color-presets {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.color-preset {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-preset:active {
+  transform: scale(0.9);
+}
+
+.color-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.color-preset.selected .color-circle {
+  box-shadow: 0 0 0 2px white,
+              0 0 0 4px rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.color-picker-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-picker-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+/* AC Controls */
+.ac-controls {
+  padding: 32px 24px 40px;
+}
+
+.ac-display {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.temp-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.temp-number {
+  font-size: 72px;
+  font-weight: 200;
+  color: white;
+  line-height: 1;
+}
+
+.temp-unit {
+  font-size: 24px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.temp-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.temp-adjust {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.temp-adjust:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.temp-adjust:active {
+  transform: scale(0.95);
+}
+
+.ac-modes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.mode-btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mode-btn.active {
+  background: #42A5F5;
+}
+
+/* Device Info Section */
+.device-info-section {
+  margin: 40px 24px 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.info-value {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+}
+
+/* Settings Button */
+.device-control-settings {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.device-control-settings:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.device-control-settings:active {
+  transform: scale(0.95);
+}
+
+/* Color Temperature Picker Modal */
+.color-temp-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.color-temp-picker-modal {
+  background: rgba(50, 50, 50, 0.95);
+  backdrop-filter: blur(50px) saturate(180%);
+  -webkit-backdrop-filter: blur(50px) saturate(180%);
+  border-radius: 20px;
+  width: 320px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.picker-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.picker-header .close-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s;
+}
+
+.picker-header .close-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.picker-content {
+  padding: 24px;
+}
+
+.temp-display {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.temp-value-large {
+  font-size: 48px;
+  font-weight: 200;
+  color: white;
+  font-family: 'SF Mono', monospace;
+}
+
+.temp-slider-container {
+  margin-bottom: 32px;
+}
+
+.custom-temp-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 40px;
+  border-radius: 20px;
+  background: linear-gradient(to right, #FFB74D 0%, #FFD54F 25%, #FFF9C4 50%, #F5F5F5 75%, #E1F5FE 100%);
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.custom-temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.custom-temp-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.custom-temp-slider::-moz-range-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.custom-temp-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+.temp-labels {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.picker-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancel-btn, .apply-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.apply-btn {
+  background: #007AFF;
+  color: white;
+}
+
+.apply-btn:hover {
+  background: #0062CC;
+}
+
+.apply-btn:active {
+  transform: scale(0.98);
+}
+
+/* Dehumidifier Controls - Apple Style */
+.dehumidifier-controls-apple {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Power Button */
+.dehumidifier-power-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.dehumidifier-power-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dehumidifier-power-button.on {
+  background: #34C759;
+  border-color: #34C759;
+  color: white;
+  box-shadow: 0 0 20px rgba(52, 199, 89, 0.4);
+}
+
+.dehumidifier-power-button:hover {
+  transform: scale(1.05);
+}
+
+.dehumidifier-power-button:active {
+  transform: scale(0.95);
+}
+
+/* Status Section */
+.dehumidifier-status-section {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  gap: 16px;
+}
+
+.status-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.status-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-value {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Humidity Section */
+.dehumidifier-humidity-section {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.humidity-target-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+}
+
+.humidity-adjust-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.humidity-adjust-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.humidity-adjust-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.humidity-adjust-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.humidity-target-display {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.target-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.target-value {
+  color: white;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -1px;
+}
+
+/* Fan Speed Section */
+.dehumidifier-fan-section {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fan-label, .mode-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 8px;
+}
+
+.fan-speed-selector {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.fan-option {
+  flex: 1;
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fan-option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.fan-option.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.fan-option:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Mode Section */
+.dehumidifier-mode-section {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-selector {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.mode-option {
+  flex: 1;
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mode-option.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.mode-option.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Compact Power Meter */
+.power-meter-compact {
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.power-meter-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.power-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.metric-value {
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'SF Mono', monospace;
+}
+
+.metric-unit {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.power-meter-kwh {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(255, 214, 10, 0.1);
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.kwh-icon {
+  color: #FFD60A;
+}
+
+.kwh-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFD60A;
+  font-family: 'SF Mono', monospace;
+}
+
+.kwh-unit {
+  font-size: 12px;
+  color: #FFD60A;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* Group Device List */
+.group-device-list {
+  margin-top: 24px;
+  padding: 0 24px;
+}
+
+.device-list-title {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.device-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.device-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.device-list-item .device-name {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+}
+
+.device-list-item .device-state {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.device-list-item .device-state.on {
+  color: #4ECDC4;
+}
+
+.device-list-item .device-state.off {
+  color: rgba(255, 255, 255, 0.4);
+}

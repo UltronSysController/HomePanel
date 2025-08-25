@@ -1,0 +1,149 @@
+/* Import device card styles */
+@import './DeviceCard.module.css';
+
+/* Group-specific styles */
+.device-card {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.device-card:hover {
+  transform: scale(1.02);
+}
+
+.device-card.active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.device-card.offline {
+  background: rgba(0, 0, 0, 0.25) !important;
+  cursor: not-allowed;
+}
+
+.device-card.offline:hover {
+  transform: none;
+}
+
+.device-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFC107;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.device-icon:hover {
+  transform: scale(1.1);
+}
+
+.device-card.active .device-icon {
+  background: #FFC107;
+}
+
+.device-card:not(.active) .device-icon {
+  background: transparent;
+}
+
+.device-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.device-icon svg {
+  color: white;
+}
+
+/* Text styles */
+.device-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 120px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.device-name:hover {
+  opacity: 0.8;
+}
+
+.device-card.active .device-name {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.device-card.offline .device-name {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.device-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.device-card.active .device-status {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.device-card.offline .device-status {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Name editing input */
+.device-name-input {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  max-width: 120px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.device-card.active .device-name-input {
+  color: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.device-name-input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.device-card.active .device-name-input:focus {
+  border-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.15);
+}

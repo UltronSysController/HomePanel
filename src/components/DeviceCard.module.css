@@ -1,0 +1,204 @@
+.deviceCard {
+  background: rgba(0, 0, 0, 0.75); /* Online & OFF 狀態：黑色 + 75% Alpha */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Remove drag-related styles from deviceCard since wrapper handles dragging */
+
+.deviceCard:hover {
+  transform: scale(1.02);
+}
+
+/* Active States - 所有設備類型統一使用白色背景 */
+.deviceCard.active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Offline State - 黑色 + 25% Alpha，無論最終狀態如何 */
+.deviceCard.offline {
+  background: rgba(0, 0, 0, 0.25) !important;
+  cursor: not-allowed;
+}
+
+.deviceCard.offline:hover {
+  transform: none;
+}
+
+/* Icon */
+.deviceIcon {
+  color: white;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+/* ON 狀態時圖標背景為黃色，圖標為白色 */
+.deviceCard.active .deviceIcon {
+  background: #FFC107; /* Material Design Amber */
+  color: white;
+}
+
+/* 離線狀態時圖標變暗 */
+.deviceCard.offline .deviceIcon {
+  color: rgba(255, 255, 255, 0.4);
+  background: transparent !important;
+}
+
+.deviceIcon:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.deviceCard.active .deviceIcon:hover {
+  background: #FFB300; /* 稍深的黃色 */
+}
+
+.deviceIcon:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.95);
+}
+
+.deviceCard.active .deviceIcon:active {
+  background: #FFA000; /* 更深的黃色 */
+}
+
+.deviceIcon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.deviceIcon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* ON 狀態時圖片圖標保持白色 */
+.deviceCard.active .deviceIcon img {
+  filter: brightness(0) invert(1);
+}
+
+/* Text */
+.deviceName {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 120px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+/* Removed hover effect - double-click to edit */
+
+/* 編輯名稱的輸入框 */
+.deviceNameInput {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  max-width: 120px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.deviceNameInput:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ON 狀態時的輸入框樣式 */
+.deviceCard.active .deviceNameInput {
+  color: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.deviceCard.active .deviceNameInput:focus {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ON 狀態時文字為黑色 */
+.deviceCard.active .deviceName {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* 離線狀態時文字變暗 */
+.deviceCard.offline .deviceName {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.deviceStatus {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* ON 狀態時狀態文字也為黑色 */
+.deviceCard.active .deviceStatus {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* 離線狀態時狀態文字也變暗 */
+.deviceCard.offline .deviceStatus {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deviceCard {
+    padding: 16px;
+  }
+  
+  .deviceIcon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .deviceIcon img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .deviceName {
+    font-size: 13px;
+  }
+  
+  .deviceStatus {
+    font-size: 11px;
+  }
+}

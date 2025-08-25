@@ -1,0 +1,930 @@
+/* Apple Home Style Layout */
+.home-page {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FFB84D 20%, #FFD93D 40%, #6BCF7F 60%, #4ECDC4 80%, #95A5FD 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 68px;
+}
+
+.sidebar.collapsed .nav-list {
+  width: 100%;
+}
+
+/* Top Controls Container */
+.sidebar-top-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-top-controls {
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Settings Top Button */
+.settings-top-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-top-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar.collapsed .settings-top-button {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  margin: 0;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 80px 12px 60px; /* Space for toggle button and footer */
+}
+
+.sidebar.collapsed .sidebar-content {
+  padding: 80px 0 60px;
+}
+
+/* Divider */
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 16px 8px;
+}
+
+/* Nav Section */
+.nav-section {
+  margin-bottom: 8px;
+}
+
+.nav-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+}
+
+.nav-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.section-control-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.section-control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sidebar.collapsed .section-controls {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .nav-section-title {
+  opacity: 0;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  width: 100%;
+  padding: 0 12px;
+}
+
+.sidebar.collapsed .nav-list {
+  padding: 0;
+  align-items: center;
+}
+
+.nav-list.collapsed {
+  height: 0;
+  opacity: 0;
+  margin: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  white-space: nowrap;
+  width: 100%;
+  overflow: visible;
+  justify-content: flex-start;
+}
+
+.sidebar.collapsed .nav-item {
+  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  width: 100%;
+  gap: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar.collapsed .nav-item:hover {
+  background: transparent;
+  cursor: default;
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-item.room-drop-zone.drag-over {
+  background: rgba(100, 200, 255, 0.3);
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+/* Drag handle */
+.drag-handle {
+  color: rgba(255, 255, 255, 0.3);
+  margin-right: 4px;
+  cursor: grab;
+  transition: color 0.2s;
+}
+
+.nav-item:hover .drag-handle {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.nav-item.dragging .drag-handle {
+  cursor: grabbing;
+}
+
+.nav-item.drag-over-reorder {
+  background: rgba(255, 255, 255, 0.15);
+  border-top: 2px solid #4ECDC4;
+}
+
+.sidebar.collapsed .drag-handle {
+  display: none;
+}
+
+.nav-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove hover transform for nav icons */
+.nav-icon:hover {
+  transform: none !important;
+  background: none !important;
+}
+
+.sidebar.collapsed .nav-icon {
+  margin: 0;
+}
+
+.nav-text {
+  flex: 1;
+  transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .nav-text {
+  display: none;
+}
+
+.device-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.sidebar.collapsed .device-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Old settings button - removed, now using top controls */
+
+/* Sidebar Footer */
+.sidebar-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.powered-by {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.powered-by:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar.collapsed .powered-by {
+  font-size: 10px;
+  letter-spacing: 0.3px;
+}
+
+.sidebar.collapsed .powered-text {
+  display: none;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 20px 40px;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  position: relative;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 68px;
+}
+
+/* Custom Scrollbar - Hidden by default */
+.main-content::-webkit-scrollbar {
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+.main-content.scrolling::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox */
+.main-content {
+  scrollbar-width: none;
+}
+
+.main-content.scrolling {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.page-header {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header .header-content {
+  flex: 1;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+}
+
+.header-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.refresh-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.refresh-button.active {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: rgba(76, 175, 80, 0.5);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-now-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refresh-now-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  transform: scale(1.05);
+}
+
+.refresh-now-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-text {
+  font-size: 13px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Room header editor */
+.room-header-editor h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.room-header-icon {
+  font-size: 32px;
+  vertical-align: middle;
+}
+
+.room-header-with-back {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.room-header-with-back:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.back-chevron {
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+}
+
+.room-header-with-back:hover .back-chevron {
+  transform: translateX(-4px);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.title-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.title-button h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.dropdown-arrow {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 20px;
+}
+
+.title-button:hover .dropdown-arrow {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Sections */
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 16px;
+  letter-spacing: -0.3px;
+}
+
+/* Environmental Section */
+.environmental-section {
+  margin-bottom: 32px;
+}
+
+.environmental-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.environmental-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.env-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.env-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.env-number {
+  font-size: 36px;
+  font-weight: 300;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.env-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.env-name {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scenes Section */
+.scenes-section {
+  margin-bottom: 32px;
+}
+
+.scenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  max-width: 400px;
+}
+
+/* Devices Section */
+.devices-section {
+  margin-bottom: 32px;
+}
+
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+/* Room Section */
+.room-section {
+  margin-bottom: 40px;
+}
+
+/* Clickable Room Title */
+.clickable-room-title {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+}
+
+.clickable-room-title:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.room-chevron {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.2s ease;
+}
+
+.clickable-room-title:hover .room-chevron {
+  transform: translateX(4px);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.room-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+/* Favorites Section */
+.favorites-section {
+  margin-bottom: 40px;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  max-width: 600px;
+}
+
+/* Temperature Card */
+.temperature-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 150px;
+  cursor: pointer;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.temperature-card:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.temp-info {
+  position: relative;
+  z-index: 1;
+}
+
+.temp-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.temp-value {
+  font-size: 36px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.temp-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.temp-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.temp-location {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.temp-description {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.temp-circle-bg {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+}
+
+/* Scene Buttons */
+.scene-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-height: 150px;
+}
+
+.scene-button:hover {
+  transform: scale(1.02);
+}
+
+.scene-button.morning {
+  background: linear-gradient(135deg, #FFA726 0%, #FF7043 100%);
+}
+
+.scene-button.night {
+  background: linear-gradient(135deg, #5C6BC0 0%, #3F51B5 100%);
+}
+
+.scene-icon {
+  font-size: 36px;
+}
+
+.scene-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Room Temperature Cards */
+.room-temp-card {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.3s;
+  align-items: flex-start;
+}
+
+.room-temp-card:hover {
+  transform: scale(1.02);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.room-temp {
+  font-size: 32px;
+  font-weight: 300;
+  color: white;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.room-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+}
+
+.room-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: auto;
+}
+
+/* Loading & Error States */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 24px 48px;
+  border-radius: 16px;
+  font-size: 18px;
+  color: white;
+}
+
+.error-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FF3737;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  z-index: 9999;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    /* Already fixed positioned */
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.show-mobile {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+  
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .room-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,155 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffd6a5 0%, #ff6b6b 25%, #c06cff 50%, #667eea 75%, #5fcfd8 100%);
+  background-attachment: fixed;
+}
+
+.configCard {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.formGroup input {
+  padding: 16px;
+  font-size: 17px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.error,
+.success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+}
+
+.error {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--accent-red);
+}
+
+.success {
+  background: rgba(52, 199, 89, 0.1);
+  color: var(--accent-green);
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 17px;
+  margin-top: 8px;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.helpSection {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.helpSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.helpSection ol {
+  padding-left: 24px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.helpSection li {
+  margin-bottom: 8px;
+}
+
+.prerequisite {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.prerequisite code {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 14px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .configCard {
+    padding: 32px 24px;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+  }
+}

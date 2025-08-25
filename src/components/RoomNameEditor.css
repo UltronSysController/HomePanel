@@ -1,0 +1,200 @@
+/* Room name editing */
+.nav-icon {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px;
+  border-radius: 4px;
+  user-select: none;
+  position: relative;
+}
+
+.nav-icon:not(.collapsed):hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.nav-icon.editing {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-text.editable {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+/* Removed hover effect - double-click to edit */
+
+/* Room name input */
+.room-name-input {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  width: 100%;
+  max-width: 120px;
+  transition: all 0.2s ease;
+}
+
+.room-name-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Icon picker overlay */
+.icon-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Icon picker modal */
+.icon-picker {
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.icon-picker-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Icon grid */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 8px;
+  max-height: calc(80vh - 100px);
+}
+
+/* Custom scrollbar */
+.icon-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.icon-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Icon option button */
+.icon-option {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 80px;
+}
+
+.icon-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.icon-option.selected {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: #FFC107;
+}
+
+.icon-emoji {
+  font-size: 28px;
+  line-height: 1;
+  user-select: none;
+}
+
+.icon-name {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .icon-picker {
+    max-width: 90vw;
+    padding: 20px;
+  }
+  
+  .icon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
+  }
+  
+  .icon-option {
+    padding: 10px 6px;
+    min-height: 70px;
+  }
+  
+  .icon-emoji {
+    font-size: 24px;
+  }
+  
+  .icon-name {
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,35 @@
+.from-yellow-400 {
+  --tw-gradient-from: #facc15;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-orange-400 {
+  --tw-gradient-to: #fb923c;
+}
+
+.from-blue-600 {
+  --tw-gradient-from: #2563eb;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-purple-600 {
+  --tw-gradient-to: #9333ea;
+}
+
+.from-gray-500 {
+  --tw-gradient-from: #6b7280;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-gray-700 {
+  --tw-gradient-to: #374151;
+}
+
+.from-green-500 {
+  --tw-gradient-from: #22c55e;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-emerald-600 {
+  --tw-gradient-to: #059669;
+}

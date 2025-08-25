@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色溫控制測試</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .control {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #007aff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007aff;
+        }
+        .log {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-radius: 3px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>BF2Z01-4B26D7M 色溫控制測試</h1>
+    
+    <div class="control">
+        <h3>基本控制</h3>
+        <button onclick="sendCommand('OnOff', {on: true})">開燈</button>
+        <button onclick="sendCommand('OnOff', {on: false})">關燈</button>
+    </div>
+
+    <div class="control">
+        <h3>亮度控制</h3>
+        <input type="range" id="brightness" min="0" max="100" value="50" oninput="updateBrightness(this.value)">
+        <div>亮度: <span class="value" id="brightnessValue">50</span>%</div>
+        <button onclick="setBrightness()">設定亮度</button>
+    </div>
+
+    <div class="control">
+        <h3>色溫控制測試</h3>
+        <input type="range" id="colorTemp" min="2700" max="6500" value="4000" step="100" oninput="updateColorTemp(this.value)">
+        <div>色溫: <span class="value" id="colorTempValue">4000</span>K</div>
+        
+        <h4>測試不同格式:</h4>
+        <button onclick="testColorTemp1()">格式1: ColorAbsolute + temperature</button>
+        <button onclick="testColorTemp2()">格式2: ColorAbsolute + color.temperatureK</button>
+        <button onclick="testColorTemp3()">格式3: ColorAbsolute + temperatureK</button>
+        <button onclick="testColorTemp4()" style="background: #28a745;">格式4: ColorAbsolute + color.temperature (CMS)</button>
+    </div>
+
+    <div class="control">
+        <h3>快速預設</h3>
+        <button onclick="setColorTempValue(2700)">暖白 2700K</button>
+        <button onclick="setColorTempValue(3000)">暖黃 3000K</button>
+        <button onclick="setColorTempValue(4000)">自然白 4000K</button>
+        <button onclick="setColorTempValue(5000)">日光白 5000K</button>
+        <button onclick="setColorTempValue(6500)">冷白 6500K</button>
+    </div>
+
+    <div class="log" id="log">
+        <div class="log-entry">等待操作...</div>
+    </div>
+
+    <script>
+        const API_KEY = 'k9SjwnywYj9bxFRAT3V2y7a36F68wiSspbTYCE3wgJtb3BXy5TaEzgtfao85zfV99d';
+        const APP_ID = 'WRGbfWtd';
+        const DEVICE_SN = 'BF2Z01-4B26D7M';
+        const API_URL = 'http://localhost:3001/api/usr/v4/SendCommand';
+
+        function updateBrightness(value) {
+            document.getElementById('brightnessValue').textContent = value;
+        }
+
+        function updateColorTemp(value) {
+            document.getElementById('colorTempValue').textContent = value;
+        }
+
+        function setColorTempValue(value) {
+            document.getElementById('colorTemp').value = value;
+            updateColorTemp(value);
+        }
+
+        function addLog(message, isError = false) {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + (isError ? 'error' : 'success');
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${message}`;
+            log.insertBefore(entry, log.firstChild);
+            
+            // 限制日誌條目數量
+            while (log.children.length > 50) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        async function sendCommand(command, params) {
+            const payload = {
+                sn: DEVICE_SN,
+                iotDevs: ['Light'],
+                iotCmds: [{
+                    command: command,
+                    params: params
+                }]
+            };
+
+            addLog(`發送命令: ${command} - ${JSON.stringify(params)}`);
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Api-Key': API_KEY,
+                        'Ultron-Cloud-Appid': APP_ID
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.valid) {
+                    addLog(`✓ 命令成功: ${JSON.stringify(result)}`);
+                } else {
+                    addLog(`✗ 命令失敗: ${JSON.stringify(result)}`, true);
+                }
+                
+                return result;
+            } catch (error) {
+                addLog(`✗ 錯誤: ${error.message}`, true);
+                return null;
+            }
+        }
+
+        function setBrightness() {
+            const value = parseInt(document.getElementById('brightness').value);
+            sendCommand('BrightnessAbsolute', { brightness: value });
+        }
+
+        function testColorTemp1() {
+            const value = parseInt(document.getElementById('colorTemp').value);
+            addLog(`測試格式1: ColorAbsolute + temperature: ${value}`);
+            sendCommand('ColorAbsolute', { temperature: value });
+        }
+
+        function testColorTemp2() {
+            const value = parseInt(document.getElementById('colorTemp').value);
+            addLog(`測試格式2: ColorAbsolute + color.temperatureK: ${value}`);
+            sendCommand('ColorAbsolute', { 
+                color: {
+                    temperatureK: value
+                }
+            });
+        }
+
+        function testColorTemp3() {
+            const value = parseInt(document.getElementById('colorTemp').value);
+            addLog(`測試格式3: ColorAbsolute + temperatureK: ${value}`);
+            sendCommand('ColorAbsolute', { temperatureK: value });
+        }
+
+        function testColorTemp4() {
+            const value = parseInt(document.getElementById('colorTemp').value);
+            addLog(`測試格式4 (CMS): ColorAbsolute + color.temperature: ${value}`);
+            sendCommand('ColorAbsolute', { 
+                color: {
+                    temperature: value  // 注意：是 temperature 不是 temperatureK
+                }
+            });
+        }
+    </script>
+</body>
+</html>

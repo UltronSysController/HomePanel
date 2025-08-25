@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ultron-smart": {
+      "command": "node",
+      "args": ["/Users/aaron0624/Projects/cms-server-main/dist/index.js"],
+      "env": {}
+    }
+  }
+}

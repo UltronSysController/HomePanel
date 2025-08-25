@@ -1,0 +1,210 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.main {
+  flex: 1;
+  margin-left: 80px;
+  padding: 20px;
+  max-width: 1400px;
+  margin-right: auto;
+}
+
+/* 頂部標題列 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.groupButton {
+  background: none;
+  padding: 0;
+  text-align: left;
+}
+
+.groupButton h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.groupButton h1:hover {
+  opacity: 0.7;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 場景快捷按鈕 */
+.scenesSection {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.sceneButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.sceneButton:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.sceneIcon {
+  font-size: 24px;
+}
+
+/* 房間容器 */
+.roomsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 未分配設備區塊 */
+.unassignedSection {
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: all 0.3s ease;
+  min-height: 120px;
+}
+
+.unassignedSection.dragOver {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px var(--accent-blue);
+  transform: scale(1.02);
+}
+
+.unassignedSection h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.dropHint {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--accent-blue);
+  font-size: 16px;
+  font-weight: 500;
+  border: 2px dashed var(--accent-blue);
+  border-radius: var(--radius-md);
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.deviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+/* 載入狀態 */
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loadingOverlay .loading {
+  background: white;
+  padding: 24px 48px;
+  border-radius: var(--radius-md);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* 錯誤提示 */
+.errorToast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--accent-red);
+  color: white;
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+  .main {
+    margin-left: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .headerActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .deviceGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+}
