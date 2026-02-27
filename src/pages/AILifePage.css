@@ -1,0 +1,639 @@
+/* AI Life Page Styles */
+/* Inherits sidebar and layout styles from HomePage.css */
+
+/* Title */
+.ai-life-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 32px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-title-icon {
+  color: #FFD700;
+}
+
+/* Section Title with Icon */
+.section-title-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  opacity: 0.8;
+}
+
+/* ===================== */
+/* Home Summary Card     */
+/* ===================== */
+.ai-summary-section {
+  margin-bottom: 40px;
+}
+
+.ai-summary-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summary-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.summary-stat:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stat-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+}
+
+.stat-icon-active {
+  background: linear-gradient(135deg, #34c759, #30d158);
+}
+
+.stat-icon-temp {
+  background: linear-gradient(135deg, #FF6B6B, #ff3b30);
+}
+
+.stat-icon-humidity {
+  background: linear-gradient(135deg, #5AC8FA, #007aff);
+}
+
+.stat-icon-weather {
+  background: linear-gradient(135deg, #FFD60A, #FF9F0A);
+}
+
+.stat-icon-energy {
+  background: linear-gradient(135deg, #FFD700, #FF8C00);
+}
+
+.stat-icon-offline {
+  background: linear-gradient(135deg, #8e8e93, #636366);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.stat-value-warning {
+  color: #FF9F0A;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===================== */
+/* Smart Suggestions     */
+/* ===================== */
+.ai-suggestions-section {
+  margin-bottom: 40px;
+}
+
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestion-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s;
+}
+
+.suggestion-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.suggestion-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.suggestion-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.suggestion-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.suggestion-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+.suggestion-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.suggestion-action-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.suggestion-action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.suggestion-dismiss-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.suggestion-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Suggestion type-specific accent borders */
+.suggestion-time {
+  border-left: 3px solid #5C6BC0;
+}
+
+.suggestion-weather {
+  border-left: 3px solid #FF9F0A;
+}
+
+.suggestion-sensor {
+  border-left: 3px solid #30d158;
+}
+
+.suggestion-energy {
+  border-left: 3px solid #FFD700;
+}
+
+.suggestion-state {
+  border-left: 3px solid #5AC8FA;
+}
+
+.suggestion-offline {
+  border-left: 3px solid #8e8e93;
+}
+
+.no-suggestions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.no-suggestions-icon {
+  font-size: 24px;
+}
+
+.no-suggestions-text {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===================== */
+/* Room Comfort Cards    */
+/* ===================== */
+.ai-rooms-section {
+  margin-bottom: 40px;
+}
+
+.room-comfort-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.room-comfort-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 160px;
+}
+
+.room-comfort-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.comfort-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comfort-room-icon {
+  font-size: 22px;
+}
+
+.comfort-room-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  flex: 1;
+}
+
+.comfort-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.comfort-good {
+  background: #34c759;
+  box-shadow: 0 0 8px rgba(52, 199, 89, 0.5);
+}
+
+.comfort-fair {
+  background: #FFD60A;
+  box-shadow: 0 0 8px rgba(255, 214, 10, 0.5);
+}
+
+.comfort-poor {
+  background: #ff3b30;
+  box-shadow: 0 0 8px rgba(255, 59, 48, 0.5);
+}
+
+.comfort-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+}
+
+.comfort-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.comfort-item svg {
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.comfort-item-small {
+  font-size: 13px;
+}
+
+.comfort-pm-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.comfort-no-data {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.comfort-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+.comfort-device-count {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===================== */
+/* Quick Scenes          */
+/* ===================== */
+.ai-scenes-section {
+  margin-bottom: 40px;
+}
+
+.ai-scenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  max-width: 800px;
+}
+
+.ai-scene-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ai-scene-button.morning {
+  background: linear-gradient(135deg, #FFA726 0%, #FF7043 100%);
+}
+
+.ai-scene-button.night {
+  background: linear-gradient(135deg, #5C6BC0 0%, #3F51B5 100%);
+}
+
+.ai-scene-button.away {
+  background: linear-gradient(135deg, #78909C 0%, #546E7A 100%);
+}
+
+.ai-scene-button.home {
+  background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+}
+
+.ai-scene-button.movie {
+  background: linear-gradient(135deg, #AB47BC 0%, #7B1FA2 100%);
+}
+
+.ai-scene-button.reading {
+  background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
+}
+
+.ai-scene-icon {
+  font-size: 32px;
+}
+
+.ai-scene-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+/* ===================== */
+/* Responsive — Tablet   */
+/* ===================== */
+@media (max-width: 768px) {
+  /* Desktop header hidden, mobile header used from HomePage.css */
+  .ai-life-title {
+    font-size: 24px;
+  }
+
+  /* Summary card — 2 columns on tablet */
+  .summary-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-stat {
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .stat-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  /* Room comfort — 2 columns */
+  .room-comfort-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .room-comfort-card {
+    padding: 16px;
+    min-height: 140px;
+  }
+
+  /* Scenes — 3 per row */
+  .ai-scenes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 100%;
+  }
+
+  .ai-scene-button {
+    padding: 16px 12px;
+  }
+
+  .ai-scene-icon {
+    font-size: 28px;
+  }
+
+  .ai-scene-name {
+    font-size: 13px;
+  }
+
+  /* Suggestions — stack action buttons below */
+  .suggestion-card {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+
+  .suggestion-icon {
+    font-size: 24px;
+    width: 32px;
+  }
+
+  .suggestion-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Sections spacing */
+  .ai-summary-section,
+  .ai-suggestions-section,
+  .ai-rooms-section,
+  .ai-scenes-section {
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 19px;
+  }
+
+  /* Main content padding for bottom tab bar */
+  .main-content {
+    padding-bottom: 100px;
+  }
+}
+
+/* ===================== */
+/* Responsive — Phone    */
+/* ===================== */
+@media (max-width: 480px) {
+  /* Summary card — single column */
+  .summary-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ai-summary-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .summary-stat {
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  /* Room comfort — single column */
+  .room-comfort-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .room-comfort-card {
+    min-height: auto;
+    gap: 12px;
+  }
+
+  .comfort-data {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Scenes — 3 per row, compact */
+  .ai-scenes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .ai-scene-button {
+    padding: 16px 8px;
+    border-radius: 14px;
+  }
+
+  .ai-scene-icon {
+    font-size: 26px;
+  }
+
+  .ai-scene-name {
+    font-size: 12px;
+  }
+
+  /* Suggestions — compact */
+  .suggestion-card {
+    padding: 12px 14px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .suggestion-title {
+    font-size: 14px;
+  }
+
+  .suggestion-desc {
+    font-size: 12px;
+  }
+
+  .suggestion-action-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* No-suggestions compact */
+  .no-suggestions {
+    padding: 28px 16px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .section-title-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
