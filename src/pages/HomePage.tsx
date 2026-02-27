@@ -262,9 +262,9 @@ const HomePage: React.FC = () => {
               <span className="nav-text">自動化</span>
             </button>
             
-            <button className="nav-item">
+            <button className="nav-item" onClick={() => navigate('/ai-life')}>
               <Sparkles size={18} className="nav-icon" />
-              <span className="nav-text">探索</span>
+              <span className="nav-text">AI Life</span>
             </button>
           </div>
 

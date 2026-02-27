@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import AILifePage from './pages/AILifePage';
 import ConfigPage from './pages/ConfigPage';
 import useSmartHomeStore from './store';
 import './styles/global.css';
@@ -21,6 +22,10 @@ function App() {
         <Route 
           path="/" 
           element={apiConfig ? <HomePage /> : <Navigate to="/config" />} 
+        />
+        <Route
+          path="/ai-life"
+          element={apiConfig ? <AILifePage /> : <Navigate to="/config" />}
         />
         <Route path="/config" element={<ConfigPage />} />
       </Routes>

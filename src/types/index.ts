@@ -100,6 +100,18 @@ export interface SceneAction {
   command: any;
 }
 
+// AI 建議類型
+export interface AISuggestion {
+  id: string;
+  type: 'time' | 'weather' | 'sensor' | 'energy' | 'state' | 'offline';
+  icon: string;
+  title: string;
+  description: string;
+  actionLabel?: string;
+  actionDeviceSn?: string;
+  dismissible: boolean;
+}
+
 // 設備群組類型
 export interface DeviceGroup {
   id: string;
