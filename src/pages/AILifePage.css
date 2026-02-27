@@ -450,38 +450,190 @@
 }
 
 /* ===================== */
-/* Responsive            */
+/* Responsive — Tablet   */
 /* ===================== */
 @media (max-width: 768px) {
-  .summary-stats-grid {
-    grid-template-columns: 1fr;
+  /* Desktop header hidden, mobile header used from HomePage.css */
+  .ai-life-title {
+    font-size: 24px;
   }
 
+  /* Summary card — 2 columns on tablet */
+  .summary-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-stat {
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .stat-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  /* Room comfort — 2 columns */
   .room-comfort-grid {
     grid-template-columns: 1fr 1fr;
   }
 
-  .ai-scenes-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .room-comfort-card {
+    padding: 16px;
+    min-height: 140px;
   }
 
+  /* Scenes — 3 per row */
+  .ai-scenes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 100%;
+  }
+
+  .ai-scene-button {
+    padding: 16px 12px;
+  }
+
+  .ai-scene-icon {
+    font-size: 28px;
+  }
+
+  .ai-scene-name {
+    font-size: 13px;
+  }
+
+  /* Suggestions — stack action buttons below */
   .suggestion-card {
     flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+
+  .suggestion-icon {
+    font-size: 24px;
+    width: 32px;
   }
 
   .suggestion-actions {
     width: 100%;
     justify-content: flex-end;
     margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Sections spacing */
+  .ai-summary-section,
+  .ai-suggestions-section,
+  .ai-rooms-section,
+  .ai-scenes-section {
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 19px;
+  }
+
+  /* Main content padding for bottom tab bar */
+  .main-content {
+    padding-bottom: 100px;
   }
 }
 
+/* ===================== */
+/* Responsive — Phone    */
+/* ===================== */
 @media (max-width: 480px) {
-  .room-comfort-grid {
+  /* Summary card — single column */
+  .summary-stats-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
-  .ai-scenes-grid {
+  .ai-summary-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .summary-stat {
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  /* Room comfort — single column */
+  .room-comfort-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .room-comfort-card {
+    min-height: auto;
+    gap: 12px;
+  }
+
+  .comfort-data {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Scenes — 3 per row, compact */
+  .ai-scenes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .ai-scene-button {
+    padding: 16px 8px;
+    border-radius: 14px;
+  }
+
+  .ai-scene-icon {
+    font-size: 26px;
+  }
+
+  .ai-scene-name {
+    font-size: 12px;
+  }
+
+  /* Suggestions — compact */
+  .suggestion-card {
+    padding: 12px 14px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .suggestion-title {
+    font-size: 14px;
+  }
+
+  .suggestion-desc {
+    font-size: 12px;
+  }
+
+  .suggestion-action-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* No-suggestions compact */
+  .no-suggestions {
+    padding: 28px 16px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .section-title-icon {
+    width: 18px;
+    height: 18px;
   }
 }

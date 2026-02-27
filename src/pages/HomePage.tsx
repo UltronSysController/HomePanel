@@ -43,6 +43,7 @@ const HomePage: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<DeviceGroup | null>(null);
   const [dragOverRoom, setDragOverRoom] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [showAddRoom, setShowAddRoom] = useState(false);
   const [roomsCollapsed, setRoomsCollapsed] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
@@ -228,8 +229,14 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="home-page">
+      {/* Mobile Sidebar Overlay */}
+      <div
+        className={`sidebar-overlay ${showMobileSidebar ? 'visible' : ''}`}
+        onClick={() => setShowMobileSidebar(false)}
+      />
+
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+      <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${showMobileSidebar ? 'show-mobile' : ''}`}>
         {/* Top Controls */}
         <div className="sidebar-top-controls">
           <button 
@@ -349,6 +356,19 @@ const HomePage: React.FC = () => {
         className={`main-content ${sidebarCollapsed ? 'sidebar-collapsed' : ''} ${isScrolling ? 'scrolling' : ''}`}
         onScroll={handleScroll}
       >
+        {/* Mobile Header */}
+        <div className="mobile-header">
+          <button className="mobile-menu-btn" onClick={() => setShowMobileSidebar(true)}>
+            <Menu size={22} />
+          </button>
+          <span className="mobile-header-title">
+            {selectedRoom ? selectedRoom.name : (currentGroup?.name || '我的家')}
+          </span>
+          <button className="mobile-header-action" onClick={() => navigate('/config')}>
+            <Settings size={20} />
+          </button>
+        </div>
+
         <header className="page-header">
           <div className="header-content">
             {selectedRoom ? (
@@ -671,6 +691,22 @@ const HomePage: React.FC = () => {
       {showAddRoom && (
         <AddRoomModal onClose={() => setShowAddRoom(false)} />
       )}
+
+      {/* Bottom Tab Bar (Mobile) */}
+      <nav className="bottom-tab-bar">
+        <button className="tab-item active" onClick={() => setSelectedRoomId(null)}>
+          <span className="tab-icon"><Home size={22} /></span>
+          <span className="tab-label">首頁</span>
+        </button>
+        <button className="tab-item" onClick={() => navigate('/ai-life')}>
+          <span className="tab-icon"><Sparkles size={22} /></span>
+          <span className="tab-label">AI Life</span>
+        </button>
+        <button className="tab-item" onClick={() => navigate('/config')}>
+          <span className="tab-icon"><Settings size={22} /></span>
+          <span className="tab-label">設定</span>
+        </button>
+      </nav>
     </div>
   );
 };
