@@ -1,0 +1,195 @@
+/* ============================================
+   EnergyPage — Apple Home 2026
+   ============================================ */
+
+/* --- Period Tabs --- */
+.period-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--color-surface-dim);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.period-tab {
+  padding: var(--space-1) var(--space-4);
+  border-radius: calc(var(--radius-sm) - 2px);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.period-tab.active {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+/* --- Summary Cards --- */
+.energy-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.energy-stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.energy-stat-card.primary {
+  background: var(--color-accent);
+  color: var(--color-text-on-color);
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-dim);
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.energy-stat-card.primary .stat-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.stat-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat-unit {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  opacity: 0.7;
+}
+
+.stat-label {
+  font-size: var(--text-xs);
+  opacity: 0.6;
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+/* --- Breakdown --- */
+.energy-breakdown {
+  margin-bottom: var(--space-8);
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.breakdown-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breakdown-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+}
+
+.breakdown-value {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdown-bar-bg {
+  height: 6px;
+  background: var(--color-surface-dim);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.breakdown-bar-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+  min-width: 4px;
+}
+
+.breakdown-kwh {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  text-align: right;
+}
+
+/* --- Tips --- */
+.energy-tips {
+  margin-bottom: var(--space-6);
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(52, 199, 89, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+.tip-icon {
+  color: var(--color-success);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tip-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .energy-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .energy-stat-card {
+    padding: var(--space-4);
+    flex-direction: column;
+  }
+}

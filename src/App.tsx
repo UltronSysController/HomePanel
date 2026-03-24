@@ -9,7 +9,6 @@ function App() {
   const { apiConfig, api, setApiConfig } = useSmartHomeStore();
 
   useEffect(() => {
-    // 如果有 API 配置但還沒初始化 API，則初始化
     if (apiConfig && !api) {
       setApiConfig(apiConfig);
     }
@@ -18,9 +17,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route 
-          path="/" 
-          element={apiConfig ? <HomePage /> : <Navigate to="/config" />} 
+        <Route
+          path="/*"
+          element={apiConfig ? <HomePage /> : <Navigate to="/config" />}
         />
         <Route path="/config" element={<ConfigPage />} />
       </Routes>

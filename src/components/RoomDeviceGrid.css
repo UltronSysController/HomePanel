@@ -1,149 +1,49 @@
-.room-device-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-  grid-auto-rows: 1fr; /* 確保所有行高度一致 */
-}
+/* ============================================
+   RoomDeviceGrid — Apple Home 2026
+   ============================================ */
 
 .device-card-wrapper {
-  position: relative;
-  cursor: grab;
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform var(--duration-fast) var(--ease-default),
+    opacity var(--duration-fast) var(--ease-default);
 }
 
 .device-card-wrapper.dragging {
-  opacity: 0.5;
-  cursor: grabbing;
+  opacity: 0.4;
   transform: scale(0.95);
 }
 
 .device-card-wrapper.drag-over {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
-.device-card-wrapper.drag-over::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -8px;
-  bottom: 0;
-  width: 4px;
-  background: #4ECDC4;
-  border-radius: 2px;
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
-
-/* Group creation hover effect */
 .device-card-wrapper.creating-group {
-  animation: group-merge 1s ease-out;
+  animation: groupPulse 0.8s ease infinite;
   position: relative;
-}
-
-/* Visual indicator for drop zones */
-.device-card-wrapper.creating-group::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 25%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
-  border-right: 2px dashed rgba(255, 255, 255, 0.3);
-  z-index: 1;
-  pointer-events: none;
-}
-
-@keyframes group-merge {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-  }
-  100% {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
 }
 
 .device-card-wrapper.creating-group::after {
-  content: '➕';
+  content: '+';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 24px;
-  background: rgba(78, 205, 196, 0.9);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fade-in 0.3s ease-out;
-  z-index: 10;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* Adding device to group animation */
-.device-card-wrapper.adding-to-group {
-  animation: group-merge 1s ease-out;
-  position: relative;
-}
-
-/* Visual indicator for group drop zones - same as device */
-.device-card-wrapper.adding-to-group::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 25%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
-  border-right: 2px dashed rgba(255, 255, 255, 0.3);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.device-card-wrapper.adding-to-group::after {
-  content: '➕';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  background: rgba(78, 205, 196, 0.9);
+  background: var(--color-accent);
   color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fade-in 0.3s ease-out;
+  border-radius: var(--radius-full);
+  font-size: 20px;
+  font-weight: var(--weight-bold);
   z-index: 10;
+  box-shadow: var(--shadow-md);
+  animation: fadeIn var(--duration-fast) var(--ease-default);
+}
+
+@keyframes groupPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); filter: brightness(1.1); }
 }

@@ -1,26 +1,26 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Menu, ChevronLeft, Plus, ChevronDown, ChevronUp, Home, GitBranch, Sparkles, GripVertical, RefreshCw } from 'lucide-react';
+import { RefreshCw, ChevronRight } from 'lucide-react';
 import useSmartHomeStore from '../store';
-import DeviceCard from '../components/DeviceCard';
+import Sidebar from '../components/Sidebar';
 import DeviceControl from '../components/DeviceControl';
 import GroupControl from '../components/GroupControl';
 import GroupSelector from '../components/GroupSelector';
 import AddRoomModal from '../components/AddRoomModal';
 import RoomDeviceGrid from '../components/RoomDeviceGrid';
-import RoomNameEditor from '../components/RoomNameEditor';
 import WeatherIcon from '../components/WeatherIcon';
+import AutomationPage from './AutomationPage';
+import EnergyPage from './EnergyPage';
 import weatherService from '../services/weather';
-import { Device, Room, DeviceGroup } from '../types';
-import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { Device, Room, DeviceGroup, TabId } from '../types';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { 
-    groups, 
-    currentGroupId, 
-    devices, 
+  const {
+    groups,
+    currentGroupId,
+    devices,
     rooms,
     roomOrder,
     deviceOrder,
@@ -30,71 +30,51 @@ const HomePage: React.FC = () => {
     apiConfig,
     setApiConfig,
     loadGroups,
-    selectGroup,
     clearError,
-    updateDeviceRoom,
-    updateRoomOrder,
+    updateRoom,
+    deleteRoom,
     updateDeviceOrder,
-    toggleDevice
+    toggleDevice,
   } = useSmartHomeStore();
 
+  const [activeTab, setActiveTab] = useState<TabId>('home');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showGroupSelector, setShowGroupSelector] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<DeviceGroup | null>(null);
-  const [dragOverRoom, setDragOverRoom] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [showAddRoom, setShowAddRoom] = useState(false);
-  const [roomsCollapsed, setRoomsCollapsed] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [showAddRoom, setShowAddRoom] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [outdoorWeather, setOutdoorWeather] = useState<{
     temperature: number;
     location: string;
     description: string;
     weatherCode: number;
   } | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const currentGroup = groups.find(g => g.groupId === currentGroupId);
   const selectedRoom = rooms.find(r => r.id === selectedRoomId);
 
-  // Get ordered rooms
   const orderedRooms = roomOrder
     .map(id => rooms.find(r => r.id === id))
     .filter((room): room is Room => room !== undefined);
 
-  // Drag and drop for rooms
-  const roomDragAndDrop = useDragAndDrop({
-    items: orderedRooms,
-    onReorder: (newRooms) => {
-      const newOrder = newRooms.map(room => room.id);
-      updateRoomOrder(newOrder);
-    },
-    itemKey: (room) => room.id
-  });
-
+  // Initialize data
   useEffect(() => {
-    const initializeData = async () => {
-      // 如果有保存的 API 配置但沒有 API 實例，重新初始化
-      if (apiConfig && !api) {
-        setApiConfig(apiConfig);
-      }
-      
-      // 載入群組
+    const init = async () => {
+      if (apiConfig && !api) setApiConfig(apiConfig);
       await loadGroups();
-      
-      // 如果有已保存的群組ID，自動載入該群組的設備
       const store = useSmartHomeStore.getState();
       if (store.currentGroupId && store.api) {
         await store.selectGroup(store.currentGroupId);
       }
     };
-    initializeData();
+    init();
   }, [apiConfig, api, setApiConfig, loadGroups]);
-  
-  // 獲取室外天氣
+
+  // Weather
   useEffect(() => {
     const fetchWeather = async () => {
       const weather = await weatherService.getWeather();
@@ -103,74 +83,69 @@ const HomePage: React.FC = () => {
           temperature: weather.temperature,
           location: weather.location,
           description: weather.description,
-          weatherCode: weather.weatherCode
+          weatherCode: weather.weatherCode,
         });
       }
     };
-    
-    // 初次載入
     fetchWeather();
-    
-    // 每 1 小時更新一次
     const interval = setInterval(fetchWeather, 60 * 60 * 1000);
-    
     return () => clearInterval(interval);
   }, []);
 
-  // 手動更新設備狀態
-  const updateDeviceStates = async () => {
+  // Auto-refresh
+  const refreshDevices = useCallback(async () => {
     const store = useSmartHomeStore.getState();
     if (store.currentGroupId && store.api) {
       setIsRefreshing(true);
       try {
         await store.refreshDeviceStates(store.currentGroupId);
-      } catch (error) {
-        console.error('Failed to refresh device states:', error);
+      } catch (e) {
+        console.error('Refresh failed:', e);
       } finally {
         setIsRefreshing(false);
       }
     }
-  };
+  }, []);
 
-  // 自動更新設備狀態（當開啟時）
   useEffect(() => {
     if (!currentGroupId || !api || !autoRefresh) {
-      if (refreshIntervalRef.current) {
-        clearInterval(refreshIntervalRef.current);
-        refreshIntervalRef.current = null;
-      }
+      if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
       return;
     }
-
-    // 立即更新一次
-    updateDeviceStates();
-
-    // 設定定時器
-    refreshIntervalRef.current = setInterval(updateDeviceStates, 30000); // 30秒
-
+    refreshDevices();
+    refreshIntervalRef.current = setInterval(refreshDevices, 30000);
     return () => {
-      if (refreshIntervalRef.current) {
-        clearInterval(refreshIntervalRef.current);
-        refreshIntervalRef.current = null;
-      }
+      if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
     };
-  }, [currentGroupId, api, autoRefresh]);
+  }, [currentGroupId, api, autoRefresh, refreshDevices]);
 
+  // Clear error
   useEffect(() => {
     if (error) {
-      const timer = setTimeout(() => clearError(), 3000);
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => clearError(), 3000);
+      return () => clearTimeout(t);
     }
   }, [error, clearError]);
 
-  const handleDeviceClick = (device: Device) => {
-    setSelectedDevice(device);
-  };
-  
-  const handleGroupClick = (group: DeviceGroup) => {
-    setSelectedGroup(group);
-  };
+  // Group devices by room
+  const devicesByRoom: Record<string, Device[]> = {};
+  const unassignedDevices: Device[] = [];
+  Object.values(devices).forEach(device => {
+    if (device.roomId) {
+      if (!devicesByRoom[device.roomId]) devicesByRoom[device.roomId] = [];
+      devicesByRoom[device.roomId].push(device);
+    } else {
+      unassignedDevices.push(device);
+    }
+  });
 
+  // Device counts summary
+  const allDevices = Object.values(devices);
+  const onlineCount = allDevices.filter(d => d.online).length;
+  const onCount = allDevices.filter(d => d.state?.power).length;
+
+  const handleDeviceClick = (device: Device) => setSelectedDevice(device);
+  const handleGroupClick = (group: DeviceGroup) => setSelectedGroup(group);
   const handleDeviceToggle = (device: Device, e: React.MouseEvent) => {
     e.stopPropagation();
     if (device.online && device.type !== 'sensor' && device.type !== 'camera') {
@@ -178,496 +153,341 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleDrop = (e: React.DragEvent, roomId: string) => {
-    e.preventDefault();
-    setDragOverRoom(null);
-    const deviceSn = e.dataTransfer.getData('deviceSn');
-    if (deviceSn) {
-      updateDeviceRoom(deviceSn, roomId);
-    }
+  const handleDeviceDropToRoom = (roomId: string) => {
+    // Handle from dataTransfer if available
   };
-
-  const handleDragOver = (e: React.DragEvent, roomId: string) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    setDragOverRoom(roomId);
-  };
-
-  const handleDragLeave = () => {
-    setDragOverRoom(null);
-  };
-
-  const handleScroll = () => {
-    setIsScrolling(true);
-    
-    // Clear existing timeout
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-    
-    // Hide scrollbar after 1 second of no scrolling
-    scrollTimeoutRef.current = setTimeout(() => {
-      setIsScrolling(false);
-    }, 1000);
-  };
-
-  // Group devices by room
-  const devicesByRoom: { [key: string]: Device[] } = {};
-  const unassignedDevices: Device[] = [];
-
-  Object.values(devices).forEach(device => {
-    if (device.roomId) {
-      if (!devicesByRoom[device.roomId]) {
-        devicesByRoom[device.roomId] = [];
-      }
-      devicesByRoom[device.roomId].push(device);
-    } else {
-      unassignedDevices.push(device);
-    }
-  });
 
   return (
-    <div className="home-page">
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        {/* Top Controls */}
-        <div className="sidebar-top-controls">
-          <button 
-            className="sidebar-toggle"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          >
-            {sidebarCollapsed ? <Menu size={20} /> : <ChevronLeft size={20} />}
-          </button>
-          <button
-            onClick={() => navigate('/config')}
-            className="settings-top-button"
-            title="設定"
-          >
-            <Settings size={20} />
-          </button>
-        </div>
-        <div className="sidebar-content">
-          <div className="nav-list">
-            {/* Home and Automation */}
-            <button
-              onClick={() => setSelectedRoomId(null)}
-              className={`nav-item ${!selectedRoomId ? 'active' : ''}`}
-            >
-              <Home size={18} className="nav-icon" />
-              <span className="nav-text">家</span>
-            </button>
-            
-            <button className="nav-item">
-              <GitBranch size={18} className="nav-icon" />
-              <span className="nav-text">自動化</span>
-            </button>
-            
-            <button className="nav-item">
-              <Sparkles size={18} className="nav-icon" />
-              <span className="nav-text">探索</span>
-            </button>
-          </div>
+    <div className={`app-layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <Sidebar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        rooms={orderedRooms}
+        selectedRoomId={selectedRoomId}
+        onSelectRoom={setSelectedRoomId}
+        onAddRoom={() => setShowAddRoom(true)}
+        onUpdateRoom={updateRoom}
+        onDeleteRoom={deleteRoom}
+        onDeviceDropToRoom={handleDeviceDropToRoom}
+        dragOverRoomId={null}
+      />
 
-          <div className="nav-divider"></div>
-
-          <div className="nav-section">
-            <div className="nav-section-header">
-              <span className="nav-section-title">房間</span>
-              <div className="section-controls">
-                <button 
-                  className="section-control-btn"
-                  onClick={() => setShowAddRoom(true)}
-                  title="新增房間"
-                >
-                  <Plus size={14} />
-                </button>
-                <button 
-                  className="section-control-btn"
-                  onClick={() => setRoomsCollapsed(!roomsCollapsed)}
-                  title={roomsCollapsed ? "展開房間列表" : "收摺房間列表"}
-                >
-                  {roomsCollapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-                </button>
+      <main className="app-main">
+        {/* === HOME TAB === */}
+        {activeTab === 'home' && (
+          <div className="page-content">
+            {/* Header */}
+            <header className="home-header">
+              <div className="header-left">
+                {selectedRoom ? (
+                  <button className="back-btn" onClick={() => setSelectedRoomId(null)}>
+                    <span className="back-icon">‹</span>
+                    <h1 className="page-title">
+                      <span className="title-icon">{selectedRoom.icon}</span>
+                      {selectedRoom.name}
+                    </h1>
+                  </button>
+                ) : (
+                  <button className="home-title-btn" onClick={() => setShowGroupSelector(true)}>
+                    <h1 className="page-title">{currentGroup?.name || '我的家'}</h1>
+                    <span className="title-chevron">⌵</span>
+                  </button>
+                )}
               </div>
-            </div>
-            <div className={`nav-list ${roomsCollapsed ? 'collapsed' : ''}`}>
-              {orderedRooms.map((room, index) => (
+              <div className="header-actions">
                 <button
-                  key={room.id}
-                  className={`nav-item room-drop-zone ${dragOverRoom === room.id ? 'drag-over' : ''} ${selectedRoomId === room.id ? 'active' : ''} ${roomDragAndDrop.draggedIndex === index ? 'dragging' : ''} ${roomDragAndDrop.dragOverIndex === index ? 'drag-over-reorder' : ''}`}
-                  onClick={() => setSelectedRoomId(room.id)}
-                  onDrop={(e) => {
-                    handleDrop(e, room.id);
-                    roomDragAndDrop.handleDrop(index)(e);
+                  className={`action-btn ${autoRefresh ? 'active' : ''}`}
+                  onClick={() => {
+                    if (!autoRefresh) refreshDevices();
+                    setAutoRefresh(!autoRefresh);
                   }}
-                  onDragOver={(e) => {
-                    handleDragOver(e, room.id);
-                    roomDragAndDrop.handleDragOver(e);
-                  }}
-                  onDragEnter={roomDragAndDrop.handleDragEnter(index)}
-                  onDragLeave={() => {
-                    handleDragLeave();
-                    roomDragAndDrop.handleDragLeave();
-                  }}
-                  draggable
-                  onDragStart={roomDragAndDrop.handleDragStart(index)}
-                  onDragEnd={roomDragAndDrop.handleDragEnd}
+                  title={autoRefresh ? '停止自動更新' : '開始自動更新'}
                 >
-                  <span className="drag-handle">
-                    <GripVertical size={14} />
-                  </span>
-                  <RoomNameEditor
-                    roomId={room.id}
-                    roomName={room.name}
-                    roomIcon={room.icon}
-                    isCollapsed={sidebarCollapsed}
-                  />
-                  {devicesByRoom[room.id] && (
-                    <span className="device-count">{devicesByRoom[room.id].length}</span>
-                  )}
+                  <RefreshCw size={18} className={isRefreshing ? 'spinning' : ''} />
                 </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Powered by ULTRON */}
-        <div className="sidebar-footer">
-          <a 
-            href="https://www.ultronsmart.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="powered-by"
-          >
-            <span className="powered-text">Powered by </span>ULTRON
-          </a>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main 
-        className={`main-content ${sidebarCollapsed ? 'sidebar-collapsed' : ''} ${isScrolling ? 'scrolling' : ''}`}
-        onScroll={handleScroll}
-      >
-        <header className="page-header">
-          <div className="header-content">
-            {selectedRoom ? (
-              <div className="room-header-editor">
-              <h1 
-                className="room-header-with-back"
-                onClick={() => setSelectedRoomId(null)}
-              >
-                <span className="back-chevron">‹</span>
-                <RoomNameEditor
-                  roomId={selectedRoom.id}
-                  roomName={selectedRoom.name}
-                  roomIcon={selectedRoom.icon}
-                  className="room-header-icon"
-                  isCollapsed={sidebarCollapsed}
-                />
-              </h1>
-              </div>
-            ) : (
-            <button 
-              className="title-button"
-              onClick={() => setShowGroupSelector(true)}
-            >
-              <h1>{currentGroup?.name || '我的家'}</h1>
-              <span className="dropdown-arrow">⌵</span>
-            </button>
-            )}
-          </div>
-          <div className="header-controls">
-            <button
-              className={`refresh-button ${autoRefresh ? 'active' : ''} ${isRefreshing ? 'refreshing' : ''}`}
-              onClick={() => {
-                if (!autoRefresh) {
-                  // 如果從關閉狀態開啟，立即執行一次更新
-                  updateDeviceStates();
-                }
-                setAutoRefresh(!autoRefresh);
-              }}
-              title={autoRefresh ? '關閉自動更新' : '開啟自動更新'}
-              disabled={isRefreshing}
-            >
-              <RefreshCw size={18} className={isRefreshing ? 'spin' : ''} />
-              <span className="refresh-text">{autoRefresh ? '自動更新' : '手動更新'}</span>
-            </button>
-            {!autoRefresh && (
-              <button
-                className="refresh-now-button"
-                onClick={updateDeviceStates}
-                title="立即更新"
-                disabled={isRefreshing}
-              >
-                <RefreshCw size={18} className={isRefreshing ? 'spin' : ''} />
-              </button>
-            )}
-          </div>
-        </header>
-
-        {selectedRoom ? (
-          // Room-specific view
-          <>
-            {/* Environmental Data Section */}
-            {(() => {
-              const roomDevices = devicesByRoom[selectedRoom.id] || [];
-              const sensors = roomDevices.filter(d => d.type === 'sensor');
-              const hasEnvironmentalData = sensors.length > 0;
-              
-              // 診斷日誌
-              console.log('Room devices:', roomDevices);
-              console.log('Sensors found:', sensors);
-              sensors.forEach(sensor => {
-                console.log(`Sensor ${sensor.name} state:`, sensor.state);
-              });
-              
-              return hasEnvironmentalData ? (
-                <section className="environmental-section">
-                  <h2 className="section-title">環境</h2>
-                  <div className="environmental-grid">
-                    {sensors.map(sensor => (
-                      <div key={sensor.sn} className="environmental-card">
-                        {sensor.state?.temperature !== undefined && (
-                          <div className="env-item">
-                            <div className="env-value">
-                              <span className="env-number">{sensor.state.temperature}°</span>
-                              <span className="env-label">溫度</span>
-                            </div>
-                          </div>
-                        )}
-                        {sensor.state?.humidity !== undefined && (
-                          <div className="env-item">
-                            <div className="env-value">
-                              <span className="env-number">{sensor.state.humidity}%</span>
-                              <span className="env-label">濕度</span>
-                            </div>
-                          </div>
-                        )}
-                        {sensor.state?.pm25 !== undefined && (
-                          <div className="env-item">
-                            <div className="env-value">
-                              <span className="env-number">{sensor.state.pm25}</span>
-                              <span className="env-label">PM2.5</span>
-                            </div>
-                          </div>
-                        )}
-                        {sensor.state?.co2 !== undefined && (
-                          <div className="env-item">
-                            <div className="env-value">
-                              <span className="env-number">{sensor.state.co2}</span>
-                              <span className="env-label">CO₂ ppm</span>
-                            </div>
-                          </div>
-                        )}
-                        {sensor.state?.illuminance !== undefined && (
-                          <div className="env-item">
-                            <div className="env-value">
-                              <span className="env-number">{sensor.state.illuminance}</span>
-                              <span className="env-label">Lux</span>
-                            </div>
-                          </div>
-                        )}
-                        <div className="env-name">{sensor.name}</div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ) : null;
-            })()}
-
-            {/* Scenes Section */}
-            <section className="scenes-section">
-              <h2 className="section-title">情境</h2>
-              <div className="scenes-grid">
-                <button className="scene-button morning">
-                  <span className="scene-icon">☀️</span>
-                  <span className="scene-name">早安</span>
-                </button>
-                <button className="scene-button night">
-                  <span className="scene-icon">🌙</span>
-                  <span className="scene-name">晚安</span>
-                </button>
-              </div>
-            </section>
-
-            {/* Categorized Devices */}
-            {(() => {
-              const roomDevices = devicesByRoom[selectedRoom.id] || [];
-              const lights = roomDevices.filter(d => d.type === 'light');
-              const airConditioners = roomDevices.filter(d => d.type === 'airConditioner');
-              const others = roomDevices.filter(d => !['light', 'airConditioner', 'sensor'].includes(d.type));
-              
-              return (
-                <>
-                  {airConditioners.length > 0 && (
-                    <section className="devices-section">
-                      <h2 className="section-title">環境電器</h2>
-                      <RoomDeviceGrid
-                        roomId={selectedRoom.id}
-                        devices={airConditioners}
-                        deviceOrder={deviceOrder[selectedRoom.id] || []}
-                        onDeviceClick={handleDeviceClick}
-                        onGroupClick={handleGroupClick}
-                        onDeviceToggle={handleDeviceToggle}
-                        onReorderDevices={updateDeviceOrder}
-                      />
-                    </section>
-                  )}
-                  
-                  {lights.length > 0 && (
-                    <section className="devices-section">
-                      <h2 className="section-title">電燈</h2>
-                      <RoomDeviceGrid
-                        roomId={selectedRoom.id}
-                        devices={lights}
-                        deviceOrder={deviceOrder[selectedRoom.id] || []}
-                        onDeviceClick={handleDeviceClick}
-                        onGroupClick={handleGroupClick}
-                        onDeviceToggle={handleDeviceToggle}
-                        onReorderDevices={updateDeviceOrder}
-                      />
-                    </section>
-                  )}
-                  
-                  {others.length > 0 && (
-                    <section className="devices-section">
-                      <h2 className="section-title">其他</h2>
-                      <RoomDeviceGrid
-                        roomId={selectedRoom.id}
-                        devices={others}
-                        deviceOrder={deviceOrder[selectedRoom.id] || []}
-                        onDeviceClick={handleDeviceClick}
-                        onGroupClick={handleGroupClick}
-                        onDeviceToggle={handleDeviceToggle}
-                        onReorderDevices={updateDeviceOrder}
-                      />
-                    </section>
-                  )}
-                </>
-              );
-            })()}
-          </>
-        ) : (
-          // General home view
-          <>
-            <section className="favorites-section">
-              <h2 className="section-title">喜好項目</h2>
-              <div className="favorites-grid">
-                {/* Temperature Control */}
-                <div className="temperature-card">
-                  <div className="temp-info">
-                    <span className="temp-label">室外溫度</span>
-                    <div className="temp-main">
-                      {outdoorWeather && (
-                        <WeatherIcon weatherCode={outdoorWeather.weatherCode} size={36} />
-                      )}
-                      <div className="temp-value">
-                        {outdoorWeather ? `${outdoorWeather.temperature}°` : '--°'}
-                      </div>
-                    </div>
-                    {outdoorWeather && (
-                      <div className="temp-details">
-                        <span className="temp-description">{outdoorWeather.description}</span>
-                        <span className="temp-location">{outdoorWeather.location}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="temp-circle-bg"></div>
-                </div>
-
-                {/* Scene Buttons */}
-                <button className="scene-button morning">
-                  <span className="scene-icon">☀️</span>
-                  <span className="scene-name">早安</span>
-                </button>
-
-                <button className="scene-button night">
-                  <span className="scene-icon">🌙</span>
-                  <span className="scene-name">晚安</span>
-                </button>
-              </div>
-            </section>
-
-            {/* Rooms with devices */}
-            {orderedRooms.map(room => {
-              const roomDevices = devicesByRoom[room.id] || [];
-              if (roomDevices.length === 0) return null;
-
-              return (
-                <section key={room.id} className="room-section">
-                  <h2 
-                    className="section-title clickable-room-title"
-                    onClick={() => setSelectedRoomId(room.id)}
+                {!autoRefresh && (
+                  <button
+                    className="action-btn"
+                    onClick={refreshDevices}
+                    disabled={isRefreshing}
+                    title="立即重新整理"
                   >
-                    {room.name} <span className="room-chevron">›</span>
-                  </h2>
-                  <RoomDeviceGrid
-                    roomId={room.id}
-                    devices={roomDevices}
-                    deviceOrder={deviceOrder[room.id] || []}
-                    onDeviceClick={handleDeviceClick}
-                    onGroupClick={handleGroupClick}
-                    onDeviceToggle={handleDeviceToggle}
-                    onReorderDevices={updateDeviceOrder}
-                  />
-                </section>
-              );
-            })}
+                    <RefreshCw size={18} className={isRefreshing ? 'spinning' : ''} />
+                  </button>
+                )}
+              </div>
+            </header>
 
-            {/* Unassigned Devices */}
-            {unassignedDevices.length > 0 && (
-              <section className="room-section">
-                <h2 className="section-title">其他</h2>
-                <RoomDeviceGrid
-                  roomId="unassigned"
-                  devices={unassignedDevices}
-                  deviceOrder={deviceOrder['unassigned'] || []}
-                  onDeviceClick={handleDeviceClick}
-                  onGroupClick={handleGroupClick}
-                  onDeviceToggle={handleDeviceToggle}
-                  onReorderDevices={updateDeviceOrder}
-                />
+            {/* Status Summary */}
+            {!selectedRoom && (
+              <div className="home-status">
+                <div className="status-weather">
+                  {outdoorWeather && (
+                    <>
+                      <WeatherIcon weatherCode={outdoorWeather.weatherCode} size={20} />
+                      <span className="weather-temp">{outdoorWeather.temperature}°</span>
+                      <span className="weather-desc">{outdoorWeather.description}</span>
+                      <span className="weather-loc">{outdoorWeather.location}</span>
+                    </>
+                  )}
+                </div>
+                <div className="status-devices">
+                  <span className="status-pill">
+                    {onCount > 0 ? `${onCount} 個裝置開啟` : '所有裝置已關閉'}
+                  </span>
+                  <span className="status-pill subtle">
+                    {onlineCount}/{allDevices.length} 上線
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Scenes */}
+            {!selectedRoom && (
+              <section className="home-scenes">
+                <div className="scenes-scroll">
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">☀️</span>
+                    <span>早安</span>
+                  </button>
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">🌙</span>
+                    <span>晚安</span>
+                  </button>
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">🏠</span>
+                    <span>回家</span>
+                  </button>
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">🚪</span>
+                    <span>離家</span>
+                  </button>
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">🎬</span>
+                    <span>電影模式</span>
+                  </button>
+                  <button className="scene-pill">
+                    <span className="scene-pill-icon">📖</span>
+                    <span>閱讀模式</span>
+                  </button>
+                </div>
               </section>
             )}
-          </>
+
+            {/* Room View */}
+            {selectedRoom ? (
+              <>
+                {/* Environmental sensors */}
+                {(() => {
+                  const roomDevs = devicesByRoom[selectedRoom.id] || [];
+                  const sensors = roomDevs.filter(d => d.type === 'sensor');
+                  if (sensors.length === 0) return null;
+                  return (
+                    <section className="env-section">
+                      <div className="env-grid">
+                        {sensors.map(sensor => (
+                          <React.Fragment key={sensor.sn}>
+                            {sensor.state?.temperature != null && (
+                              <div className="env-card">
+                                <span className="env-value">{sensor.state.temperature}°C</span>
+                                <span className="env-label">溫度</span>
+                              </div>
+                            )}
+                            {sensor.state?.humidity != null && (
+                              <div className="env-card">
+                                <span className="env-value">{sensor.state.humidity}%</span>
+                                <span className="env-label">濕度</span>
+                              </div>
+                            )}
+                            {sensor.state?.pm25 != null && (
+                              <div className="env-card">
+                                <span className="env-value">{sensor.state.pm25}</span>
+                                <span className="env-label">PM2.5</span>
+                              </div>
+                            )}
+                            {sensor.state?.co2 != null && (
+                              <div className="env-card">
+                                <span className="env-value">{sensor.state.co2}</span>
+                                <span className="env-label">CO₂</span>
+                              </div>
+                            )}
+                            {sensor.state?.illuminance != null && (
+                              <div className="env-card">
+                                <span className="env-value">{sensor.state.illuminance}</span>
+                                <span className="env-label">Lux</span>
+                              </div>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })()}
+
+                {/* Room devices by category */}
+                {(() => {
+                  const roomDevs = devicesByRoom[selectedRoom.id] || [];
+                  const lights = roomDevs.filter(d => d.type === 'light');
+                  const acs = roomDevs.filter(d => d.type === 'airConditioner');
+                  const others = roomDevs.filter(d => !['light', 'airConditioner', 'sensor'].includes(d.type));
+
+                  return (
+                    <>
+                      {acs.length > 0 && (
+                        <section className="device-section">
+                          <h2 className="section-title">空調</h2>
+                          <RoomDeviceGrid
+                            roomId={selectedRoom.id}
+                            devices={acs}
+                            deviceOrder={deviceOrder[selectedRoom.id] || []}
+                            onDeviceClick={handleDeviceClick}
+                            onGroupClick={handleGroupClick}
+                            onDeviceToggle={handleDeviceToggle}
+                            onReorderDevices={updateDeviceOrder}
+                          />
+                        </section>
+                      )}
+                      {lights.length > 0 && (
+                        <section className="device-section">
+                          <h2 className="section-title">燈光</h2>
+                          <RoomDeviceGrid
+                            roomId={selectedRoom.id}
+                            devices={lights}
+                            deviceOrder={deviceOrder[selectedRoom.id] || []}
+                            onDeviceClick={handleDeviceClick}
+                            onGroupClick={handleGroupClick}
+                            onDeviceToggle={handleDeviceToggle}
+                            onReorderDevices={updateDeviceOrder}
+                          />
+                        </section>
+                      )}
+                      {others.length > 0 && (
+                        <section className="device-section">
+                          <h2 className="section-title">其他裝置</h2>
+                          <RoomDeviceGrid
+                            roomId={selectedRoom.id}
+                            devices={others}
+                            deviceOrder={deviceOrder[selectedRoom.id] || []}
+                            onDeviceClick={handleDeviceClick}
+                            onGroupClick={handleGroupClick}
+                            onDeviceToggle={handleDeviceToggle}
+                            onReorderDevices={updateDeviceOrder}
+                          />
+                        </section>
+                      )}
+                    </>
+                  );
+                })()}
+              </>
+            ) : (
+              /* Home overview — rooms with devices */
+              <>
+                {orderedRooms.map(room => {
+                  const roomDevs = devicesByRoom[room.id] || [];
+                  if (roomDevs.length === 0) return null;
+                  return (
+                    <section key={room.id} className="device-section">
+                      <div className="section-header">
+                        <h2
+                          className="section-title clickable"
+                          onClick={() => setSelectedRoomId(room.id)}
+                        >
+                          <span className="section-icon">{room.icon}</span>
+                          {room.name}
+                          <ChevronRight size={16} className="section-chevron" />
+                        </h2>
+                      </div>
+                      <RoomDeviceGrid
+                        roomId={room.id}
+                        devices={roomDevs}
+                        deviceOrder={deviceOrder[room.id] || []}
+                        onDeviceClick={handleDeviceClick}
+                        onGroupClick={handleGroupClick}
+                        onDeviceToggle={handleDeviceToggle}
+                        onReorderDevices={updateDeviceOrder}
+                      />
+                    </section>
+                  );
+                })}
+
+                {unassignedDevices.length > 0 && (
+                  <section className="device-section">
+                    <h2 className="section-title">未分配</h2>
+                    <RoomDeviceGrid
+                      roomId="unassigned"
+                      devices={unassignedDevices}
+                      deviceOrder={deviceOrder['unassigned'] || []}
+                      onDeviceClick={handleDeviceClick}
+                      onGroupClick={handleGroupClick}
+                      onDeviceToggle={handleDeviceToggle}
+                      onReorderDevices={updateDeviceOrder}
+                    />
+                  </section>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* === AUTOMATION TAB === */}
+        {activeTab === 'automation' && <AutomationPage />}
+
+        {/* === ENERGY TAB === */}
+        {activeTab === 'energy' && <EnergyPage />}
+
+        {/* === SETTINGS TAB === */}
+        {activeTab === 'settings' && (
+          <div className="page-content">
+            <header className="home-header">
+              <h1 className="page-title">設定</h1>
+            </header>
+            <div className="settings-grid">
+              <button className="settings-card" onClick={() => navigate('/config')}>
+                <span className="settings-card-icon">🔑</span>
+                <div className="settings-card-info">
+                  <span className="settings-card-title">API 設定</span>
+                  <span className="settings-card-desc">管理 UltronSMART API 連線</span>
+                </div>
+                <ChevronRight size={18} />
+              </button>
+              <button className="settings-card" onClick={() => setShowGroupSelector(true)}>
+                <span className="settings-card-icon">🏠</span>
+                <div className="settings-card-info">
+                  <span className="settings-card-title">選擇家居</span>
+                  <span className="settings-card-desc">{currentGroup?.name || '未選擇'}</span>
+                </div>
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
         )}
       </main>
 
-      {/* Loading Overlay */}
+      {/* Loading */}
       {isLoading && (
         <div className="loading-overlay">
-          <div className="loading-spinner">載入中...</div>
+          <div className="loading-content">
+            <div className="loading-spinner" />
+            <span className="loading-text">載入中...</span>
+          </div>
         </div>
       )}
 
       {/* Error Toast */}
-      {error && (
-        <div className="error-toast">{error}</div>
-      )}
+      {error && <div className="error-toast">{error}</div>}
 
-      {/* Device Control Modal */}
+      {/* Modals */}
       {selectedDevice && (
-        <DeviceControl
-          device={selectedDevice}
-          onClose={() => setSelectedDevice(null)}
-        />
+        <DeviceControl device={selectedDevice} onClose={() => setSelectedDevice(null)} />
       )}
-      
-      {/* Group Control Modal */}
       {selectedGroup && (
-        <GroupControl
-          group={selectedGroup}
-          onClose={() => setSelectedGroup(null)}
-        />
+        <GroupControl group={selectedGroup} onClose={() => setSelectedGroup(null)} />
       )}
-
-      {/* Group Selector Modal */}
       {showGroupSelector && (
         <GroupSelector onClose={() => setShowGroupSelector(false)} />
       )}
-
-      {/* Add Room Modal */}
       {showAddRoom && (
         <AddRoomModal onClose={() => setShowAddRoom(false)} />
       )}

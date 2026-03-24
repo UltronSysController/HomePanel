@@ -1,200 +1,118 @@
-/* Room name editing */
-.nav-icon {
+/* ============================================
+   RoomNameEditor — Apple Home 2026
+   ============================================ */
+
+.room-editor-icon {
+  font-size: 20px;
+  line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 2px;
-  border-radius: 4px;
+  transition: transform var(--duration-fast) var(--ease-default);
   user-select: none;
-  position: relative;
+  flex-shrink: 0;
 }
 
-.nav-icon:not(.collapsed):hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
+.room-editor-icon:hover:not(.collapsed) {
+  transform: scale(1.15);
 }
 
-.nav-icon.editing {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.nav-text.editable {
+.room-editor-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  flex: 1;
+  min-width: 0;
 }
 
-/* Removed hover effect - double-click to edit */
-
-/* Room name input */
 .room-name-input {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   padding: 2px 6px;
-  color: white;
-  font-size: 14px;
-  font-weight: 400;
-  outline: none;
+  background: var(--color-surface-dim);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 6px;
+  color: var(--color-text-primary);
   width: 100%;
   max-width: 120px;
-  transition: all 0.2s ease;
 }
 
 .room-name-input:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: var(--color-accent);
+  background: var(--color-bg-secondary);
 }
 
-/* Icon picker overlay */
+/* --- Icon Picker --- */
 .icon-picker-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100;
-  animation: fadeIn 0.2s ease-out;
+  padding: var(--space-4);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Icon picker modal */
 .icon-picker {
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
-  border-radius: 20px;
-  padding: 24px;
-  max-width: 600px;
-  max-height: 80vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  width: 100%;
+  max-width: 480px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-modal);
+  animation: scaleIn var(--duration-normal) var(--ease-spring);
 }
 
 .icon-picker-header {
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 20px;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
   text-align: center;
+  margin-bottom: var(--space-4);
+  color: var(--color-text-primary);
 }
 
-/* Icon grid */
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 8px;
-  overflow-y: auto;
-  padding-right: 8px;
-  max-height: calc(80vh - 100px);
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: var(--space-2);
 }
 
-/* Custom scrollbar */
-.icon-grid::-webkit-scrollbar {
-  width: 6px;
-}
-
-.icon-grid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
-}
-
-.icon-grid::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-.icon-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Icon option button */
 .icon-option {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 12px 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  min-height: 80px;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .icon-option:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
+  background: var(--color-surface-dim);
 }
 
 .icon-option.selected {
-  background: rgba(255, 193, 7, 0.2);
-  border-color: #FFC107;
+  background: rgba(0, 122, 255, 0.1);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .icon-emoji {
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1;
-  user-select: none;
 }
 
 .icon-name {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-  text-align: center;
-  line-height: 1.2;
-  word-break: break-word;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .icon-picker {
-    max-width: 90vw;
-    padding: 20px;
-  }
-  
-  .icon-grid {
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 6px;
-  }
-  
-  .icon-option {
-    padding: 10px 6px;
-    min-height: 70px;
-  }
-  
-  .icon-emoji {
-    font-size: 24px;
-  }
-  
-  .icon-name {
-    font-size: 10px;
-  }
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }

@@ -1,0 +1,164 @@
+/* ============================================
+   AutomationPage — Apple Home 2026
+   ============================================ */
+
+/* --- Templates --- */
+.auto-templates {
+  margin-bottom: var(--space-8);
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.template-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+  transition: all var(--duration-fast) var(--ease-default);
+  width: 100%;
+}
+
+.template-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.template-card:active {
+  transform: scale(0.98);
+}
+
+.template-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.template-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.template-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.template-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.template-chevron {
+  color: var(--color-text-quaternary);
+  flex-shrink: 0;
+}
+
+/* --- Automation List --- */
+.auto-list-section {
+  min-height: 200px;
+}
+
+.auto-loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-10);
+}
+
+.auto-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.auto-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.auto-card.disabled {
+  opacity: 0.6;
+}
+
+.auto-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 122, 255, 0.1);
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.auto-card.disabled .auto-card-icon {
+  background: var(--color-surface-dim);
+  color: var(--color-text-tertiary);
+}
+
+.auto-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.auto-card-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.auto-card-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.auto-card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.auto-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-tertiary);
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.auto-delete-btn:hover {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--color-danger);
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .template-grid {
+    grid-template-columns: 1fr;
+  }
+}
